@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Metas de Mastografía · Salud Chiapas</title>
+  <meta name="description" content="Plataforma de seguimiento de metas de mastografía del Instituto de Salud de Chiapas.">
+  <meta name="color-scheme" content="light only">
+  <meta name="theme-color" content="#AB202D">
+
+  <!-- Íconos institucionales -->
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+
+  <!-- iOS: instalar en pantalla de inicio -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Mastografía">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <style>
+    html, body { margin: 0; height: 100%; background: #FFFFFF; color-scheme: light; }
+    body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; color: #2B2B2B; }
+    #app {
+      position: fixed; inset: 0; width: 100%; height: 100%; border: 0; display: block;
+      height: 100dvh; padding-bottom: env(safe-area-inset-bottom);
+    }
+    #splash {
+      position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 16px; background: #FFFFFF; transition: opacity .3s ease; z-index: 2; padding: 24px; text-align: center;
+    }
+    #splash.oculto { opacity: 0; pointer-events: none; }
+    #splash img { width: 132px; height: 132px; }
+    #splash p { margin: 0; font-size: 15px; color: #5E5E5E; }
+    .spin { width: 26px; height: 26px; border: 3px solid #E3E6EA; border-top-color: #00948A; border-radius: 50%; animation: g .8s linear infinite; }
+    @keyframes g { to { transform: rotate(360deg); } }
+    #lento { display: none; font-size: 14px; }
+    #lento a { color: #00756D; font-weight: 600; }
+    @media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
+  </style>
+</head>
+<body>
+  <div id="splash" role="status" aria-live="polite">
+    <img src="icon-192.png" alt="Salud · Gobierno de Chiapas">
+    <div class="spin" aria-hidden="true"></div>
+    <p>Cargando la plataforma de Metas de Mastografía…</p>
+    <p id="lento">¿Tarda demasiado? <a id="directo" href="#" target="_blank" rel="noopener">Abrir la plataforma en otra pestaña</a></p>
+  </div>
+
+  <iframe id="app" title="Plataforma de Metas de Mastografía"
+          allow="clipboard-read; clipboard-write; fullscreen"
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>
+
+  <script>
+    // Liga de la implementación de Apps Script (/exec). Si se crea una implementación nueva, cambia solo esta línea.
+    var APP_URL = 'https://script.google.com/macros/s/AKfycbxYE3XGkFfYIs6oAunH7JUreFQ5CRg9_v2djJDOIisdYnbqMbNlFHxXVjDcWmlwNrtNMQ/exec';
+
+    var frame = document.getElementById('app');
+    var splash = document.getElementById('splash');
+    document.getElementById('directo').href = APP_URL;
+    frame.addEventListener('load', function () { splash.classList.add('oculto'); });
+    setTimeout(function () { document.getElementById('lento').style.display = 'block'; }, 12000);
+    frame.src = APP_URL;
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js').catch(function () { /* sin instalación offline */ });
+      });
+    }
+  </script>
+</body>
+</html>
